@@ -1,0 +1,26 @@
+package mazebot.astra.test;
+
+import mazebot.astra.direct.Robot;
+
+agent Basic {
+	module Robot robot;
+	module Console console;
+	
+	rule +!main([mazebot.astra.direct.ASTRARobot rbt]) {
+		robot.link(rbt);
+		robot.setBehaviour("FindWall");
+	}
+	
+	rule $robot.event("FoundWall", list params) {
+		robot.setBehaviour("FollowWall");
+	}
+	
+	rule $robot.event("LostWall", list params) {
+		robot.setBehaviour("FindWall");
+	}
+	
+	rule $robot.event("Collision", list params) {
+		console.println("collision");
+		robot.setVelocity(-6.0, 0.0);
+	}
+}

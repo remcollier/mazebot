@@ -1,0 +1,46 @@
+package mazebot.cartago.test;
+
+import mazebot.astra.direct.ASTRARobot;
+import mazebot.astra.direct.MazeBot;
+
+agent Main {
+	module Cartago cartago;
+	module System system;
+	
+	rule +!main(list args) {
+		cartago.startService();
+		cartago.link();
+		
+		cartago.makeArtifact("mazebot", "mazebot.cartago.MazeBotArtifact", cartago.params([]), cartago.ArtifactId id);
+		cartago.focus(id);
+		cartago.operation(id, createWorld());
+		
+		cartago.operation(id, generateMaze("mazebot.maze.DemoMaze"));
+		
+		cartago.installBehaviour("FollowWall", "mazebot.behaviour.old.FollowWall");
+		cartago.installBehaviour("FindWall", "mazebot.behaviour.old.FindWall");
+
+		!createRobot("test", 0.0, 0.0, 
+			["bumper", "sonar"],
+			["FindWall", "FollowWall"],
+			"mazebot.cartago.test.Basic",
+			id
+		);
+
+		cartago.launchGUI();
+	}
+
+	
+	rule +!createRobot(string name, double x, double y, list sensors, list behaviours, string clz, cartago.ArtifactId mId) {
+		cartago.makeArtifact(name, "mazebot.cartago.RobotArtifact", cartago.params([]), cartago.ArtifactId id);
+		cartago.linkArtifacts(id, "out-1", mId);
+		cartago.operation(id, initRobot(x, y));
+		forall(string sensor : sensors) {
+			cartago.operation(id, addSensor(sensor));
+		}
+		forall(string behaviour : behaviours) {
+			cartago.operation(id, addBehaviour(behaviour));
+		}
+		system.createAgent(name, clz);
+	}
+}
