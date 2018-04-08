@@ -14,12 +14,4 @@ public class CArtAgORobot extends BasicRobot {
 	public void setArtifact(RobotArtifact artifact) {
 		this.artifact = artifact;
 	}
-
-	public void performBehavior() {
-		super.performBehavior();
-		
-		if(!events.isEmpty()) {
-			artifact.handleEvent(events.poll());
-		}
-	}
 }

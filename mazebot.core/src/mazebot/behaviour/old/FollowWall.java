@@ -27,21 +27,21 @@ public class FollowWall implements RobotBehaviour {
 			if ((front < 1.0) || (left < 1.0) || (right < 1.0)) {
 				agent.setRotationalVelocity(-1); // always turns left
 				agent.setTranslationalVelocity(0.6);
-				System.out.println("left");
+//				System.out.println("left");
 //			} else if ((front > 1.2) || (left > 1.2) || (right > 1.2)) {
 //				System.out.println("straight");
 //				agent.setRotationalVelocity(0);
 //				agent.setTranslationalVelocity(0.6);
 			} else if ((front > 1.2) || (left > 1.2) || (right > 1.2)) {
-				System.out.println("right");
+//				System.out.println("right");
 				agent.setRotationalVelocity(1);
 				agent.setTranslationalVelocity(0.6);
 			} else {
-				System.out.println("stop turning");
+//				System.out.println("stop turning");
 				agent.setRotationalVelocity(0);
 			}
-			System.out.println("rot vel: " + agent.getRotationalVelocity());
-			System.out.println("trans vel: " + agent.getTranslationalVelocity());
+//			System.out.println("rot vel: " + agent.getRotationalVelocity());
+//			System.out.println("trans vel: " + agent.getTranslationalVelocity());
 		}
 	}
 

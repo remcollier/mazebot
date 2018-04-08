@@ -3,7 +3,7 @@ package mazebot.cartago.test;
 
 import astra.compiler.ASTRACompiler;
 
-public class CompileAgents {
+public class MBCartagoCompile {
 
 	public static void main(String[] args) {
 		ASTRACompiler.compile("mazebot.cartago.test.Main");

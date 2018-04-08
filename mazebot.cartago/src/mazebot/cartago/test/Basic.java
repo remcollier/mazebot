@@ -28,7 +28,7 @@ public class Basic extends ASTRAClass {
 			),
 			Predicate.TRUE,
 			new Block(
-				"mazebot.cartago.test.Basic", new int[] {14,18,22,5},
+				"mazebot.cartago.test.Basic", new int[] {14,18,23,5},
 				new Statement[] {
 					new ModuleCall("console",
 						"mazebot.cartago.test.Basic", new int[] {15,8,15,73},
@@ -107,14 +107,32 @@ public class Basic extends ASTRAClass {
 							}
 						}
 					),
+					new ModuleCall("cartago",
+						"mazebot.cartago.test.Basic", new int[] {18,8,18,25},
+						new Predicate("focus", new Term[] {
+							new Variable(new ObjectType(cartago.ArtifactId.class), "id")
+						}),
+						new DefaultModuleCallAdaptor() {
+							public boolean inline() {
+								return true;
+							}
+
+							public boolean invoke(Intention intention, Predicate predicate) {
+								return ((astra.lang.Cartago) intention.getModule("mazebot.cartago.test.Basic","cartago")).auto_action(intention,evaluate(intention,predicate));
+							}
+							public boolean suppressNotification() {
+								return true;
+							}
+						}
+					),
 					new BeliefUpdate('+',
-						"mazebot.cartago.test.Basic", new int[] {18,8,22,5},
+						"mazebot.cartago.test.Basic", new int[] {19,8,23,5},
 						new Predicate("robot", new Term[] {
 							new Variable(new ObjectType(cartago.ArtifactId.class), "id")
 						})
 					),
 					new ModuleCall("console",
-						"mazebot.cartago.test.Basic", new int[] {20,8,20,83},
+						"mazebot.cartago.test.Basic", new int[] {21,8,21,83},
 						new Predicate("println", new Term[] {
 							Operator.newOperator('+',
 								Primitive.newPrimitive("++++++++++++++++++++ Setting Behaviour: "),
@@ -146,7 +164,7 @@ public class Basic extends ASTRAClass {
 						}
 					),
 					new ModuleCall("cartago",
-						"mazebot.cartago.test.Basic", new int[] {21,8,21,55},
+						"mazebot.cartago.test.Basic", new int[] {22,8,22,55},
 						new Predicate("operation", new Term[] {
 							new Variable(new ObjectType(cartago.ArtifactId.class), "id"),
 							new Funct("setBehaviour", new Term[] {
@@ -170,12 +188,12 @@ public class Basic extends ASTRAClass {
 			)
 		));
 		addRule(new Rule(
-			"mazebot.cartago.test.Basic", new int[] {24,9,24,76},
+			"mazebot.cartago.test.Basic", new int[] {25,9,25,80},
 			new ModuleEvent("cartago",
 				"$cse",
 				new Predicate("signal", new Term[] {
 					new Variable(Type.STRING, "X",false),
-					new Variable(Type.FUNCTION, "Y",false)
+					new Funct("FoundWall", new Term[] {})
 				}),
 				new ModuleEventAdaptor() {
 					public Event generate(astra.core.Agent agent, Predicate predicate) {
@@ -190,12 +208,15 @@ public class Basic extends ASTRAClass {
 				new Variable(new ObjectType(cartago.ArtifactId.class), "id",false)
 			}),
 			new Block(
-				"mazebot.cartago.test.Basic", new int[] {24,75,26,5},
+				"mazebot.cartago.test.Basic", new int[] {25,79,27,5},
 				new Statement[] {
-					new ModuleCall("console",
-						"mazebot.cartago.test.Basic", new int[] {25,8,25,26},
-						new Predicate("println", new Term[] {
-							new Variable(Type.FUNCTION, "Y")
+					new ModuleCall("cartago",
+						"mazebot.cartago.test.Basic", new int[] {26,8,26,57},
+						new Predicate("operation", new Term[] {
+							new Variable(new ObjectType(cartago.ArtifactId.class), "id"),
+							new Funct("setBehaviour", new Term[] {
+								Primitive.newPrimitive("FollowWall")
+							})
 						}),
 						new DefaultModuleCallAdaptor() {
 							public boolean inline() {
@@ -203,9 +224,105 @@ public class Basic extends ASTRAClass {
 							}
 
 							public boolean invoke(Intention intention, Predicate predicate) {
-								return ((astra.lang.Console) intention.getModule("mazebot.cartago.test.Basic","console")).println(
-									(astra.term.Funct) intention.evaluate(predicate.getTerm(0))
-								);
+								return ((astra.lang.Cartago) intention.getModule("mazebot.cartago.test.Basic","cartago")).auto_action(intention,evaluate(intention,predicate));
+							}
+							public boolean suppressNotification() {
+								return true;
+							}
+						}
+					)
+				}
+			)
+		));
+		addRule(new Rule(
+			"mazebot.cartago.test.Basic", new int[] {29,9,29,79},
+			new ModuleEvent("cartago",
+				"$cse",
+				new Predicate("signal", new Term[] {
+					new Variable(Type.STRING, "X",false),
+					new Funct("LostWall", new Term[] {})
+				}),
+				new ModuleEventAdaptor() {
+					public Event generate(astra.core.Agent agent, Predicate predicate) {
+						return ((astra.lang.Cartago) agent.getModule("mazebot.cartago.test.Basic","cartago")).signal(
+							predicate.getTerm(0),
+							predicate.getTerm(1)
+						);
+					}
+				}
+			),
+			new Predicate("robot", new Term[] {
+				new Variable(new ObjectType(cartago.ArtifactId.class), "id",false)
+			}),
+			new Block(
+				"mazebot.cartago.test.Basic", new int[] {29,78,31,5},
+				new Statement[] {
+					new ModuleCall("cartago",
+						"mazebot.cartago.test.Basic", new int[] {30,8,30,55},
+						new Predicate("operation", new Term[] {
+							new Variable(new ObjectType(cartago.ArtifactId.class), "id"),
+							new Funct("setBehaviour", new Term[] {
+								Primitive.newPrimitive("FindWall")
+							})
+						}),
+						new DefaultModuleCallAdaptor() {
+							public boolean inline() {
+								return true;
+							}
+
+							public boolean invoke(Intention intention, Predicate predicate) {
+								return ((astra.lang.Cartago) intention.getModule("mazebot.cartago.test.Basic","cartago")).auto_action(intention,evaluate(intention,predicate));
+							}
+							public boolean suppressNotification() {
+								return true;
+							}
+						}
+					)
+				}
+			)
+		));
+		addRule(new Rule(
+			"mazebot.cartago.test.Basic", new int[] {33,9,33,80},
+			new ModuleEvent("cartago",
+				"$cse",
+				new Predicate("signal", new Term[] {
+					new Variable(Type.STRING, "X",false),
+					new Funct("Collision", new Term[] {})
+				}),
+				new ModuleEventAdaptor() {
+					public Event generate(astra.core.Agent agent, Predicate predicate) {
+						return ((astra.lang.Cartago) agent.getModule("mazebot.cartago.test.Basic","cartago")).signal(
+							predicate.getTerm(0),
+							predicate.getTerm(1)
+						);
+					}
+				}
+			),
+			new Predicate("robot", new Term[] {
+				new Variable(new ObjectType(cartago.ArtifactId.class), "id",false)
+			}),
+			new Block(
+				"mazebot.cartago.test.Basic", new int[] {33,79,35,5},
+				new Statement[] {
+					new ModuleCall("cartago",
+						"mazebot.cartago.test.Basic", new int[] {34,8,34,51},
+						new Predicate("operation", new Term[] {
+							new Variable(new ObjectType(cartago.ArtifactId.class), "id"),
+							new Funct("setVelocity", new Term[] {
+								Primitive.newPrimitive(-6.0),
+								Primitive.newPrimitive(0.0)
+							})
+						}),
+						new DefaultModuleCallAdaptor() {
+							public boolean inline() {
+								return true;
+							}
+
+							public boolean invoke(Intention intention, Predicate predicate) {
+								return ((astra.lang.Cartago) intention.getModule("mazebot.cartago.test.Basic","cartago")).auto_action(intention,evaluate(intention,predicate));
+							}
+							public boolean suppressNotification() {
+								return true;
 							}
 						}
 					)

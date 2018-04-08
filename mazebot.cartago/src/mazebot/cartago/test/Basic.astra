@@ -15,27 +15,23 @@ agent Basic {
 		console.println("++++++++++++++++++++ Started: " + system.name());
 		cartago.link();
 		cartago.lookupArtifact(system.name(), cartago.ArtifactId id);
+		cartago.focus(id);
 		+robot(id);
 		
 		console.println("++++++++++++++++++++ Setting Behaviour: " + system.name());
 		cartago.operation(id, setBehaviour("FindWall"));
 	}
 	
-	rule $cartago.signal(string X, funct Y) : robot(cartago.ArtifactId id) {
-		console.println(Y);
-	}
-/*
-	rule $cartago.signal("FoundWall") : robot(cartago.ArtifactId id) {
+	rule $cartago.signal(string X, FoundWall()) : robot(cartago.ArtifactId id) {
 		cartago.operation(id, setBehaviour("FollowWall"));
 	}
 	
-	rule $cartago.signal("LostWall", list params) : robot(cartago.ArtifactId id) {
+	rule $cartago.signal(string X, LostWall()) : robot(cartago.ArtifactId id) {
 		cartago.operation(id, setBehaviour("FindWall"));
 	}
 	
-	rule $cartago.signal(string X, funct Y) : robot(cartago.ArtifactId id) {
-		console.println("collision");
+	rule $cartago.signal(string X, Collision()) : robot(cartago.ArtifactId id) {
 		cartago.operation(id, setVelocity(-6.0, 0.0));
 	}
-*/
+
 }

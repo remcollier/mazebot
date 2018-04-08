@@ -55,7 +55,7 @@ public class BasicRobot extends Agent {
 			if(behaviours.get(behaviour) == null) {
 				System.out.println("No such behaviour: " + behaviour);
 			}
-			System.out.println("executing: " +behaviour);
+//			System.out.println("executing: " +behaviour);
 			behaviours.get(behaviour).execute(this);
 		}
 	}
@@ -77,6 +77,10 @@ public class BasicRobot extends Agent {
 		events.add(event);
 	}
 
+	public boolean hasEvents() {
+		return !events.isEmpty();
+	}
+	
 	public RobotEvent getEvent() {
 		return events.poll();
 	}

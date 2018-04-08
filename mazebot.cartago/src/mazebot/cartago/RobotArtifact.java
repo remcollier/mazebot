@@ -8,6 +8,7 @@ import javax.vecmath.Vector3d;
 
 import cartago.ARTIFACT_INFO;
 import cartago.Artifact;
+import cartago.INTERNAL_OPERATION;
 import cartago.OPERATION;
 import cartago.OUTPORT;
 import cartago.OpFeedbackParam;
@@ -23,6 +24,10 @@ public class RobotArtifact extends Artifact {
 	public RobotArtifact() {
 		super();
 	}
+	
+	public void init() {
+		this.defineObsProperty("events", 0);
+	}
 
 	@OPERATION
 	public void initRobot(double x, double y) {
@@ -32,6 +37,7 @@ public class RobotArtifact extends Artifact {
 		// Link it to the environment
 		try {
 			execLinkedOp("out-1", "link", robot);
+			execInternalOp("checkEvents");
 		} catch (OperationException e) {
 			e.printStackTrace();
 		}
@@ -87,6 +93,14 @@ public class RobotArtifact extends Artifact {
 	}
 
 	@OPERATION
+	public void stop() {
+		if (robot == null)
+			throw new RuntimeException("Agent is not linked to a robot");
+
+		robot.setBehaviour(null);
+	}
+
+	@OPERATION
 	public void getCoordinates(OpFeedbackParam<Double> x, OpFeedbackParam<Double> y) {
 		Point3d coords = new Point3d();
 		robot.getCoords(coords);
@@ -94,7 +108,18 @@ public class RobotArtifact extends Artifact {
 		y.set(coords.z);
 	}
 
-	public void handleEvent(RobotEvent poll) {
-		this.signal(poll.getType(), poll.getParams());
+	@INTERNAL_OPERATION
+	public void checkEvents() {
+		while (true) {
+			while (robot.hasEvents()) {
+				RobotEvent event = robot.getEvent();
+				if (event.getParams() == null) {
+					signal(event.getType());
+				} else {
+					signal(event.getType(), event.getParams());
+				}
+			}
+			await_time(100);
+		}
 	}
 }
